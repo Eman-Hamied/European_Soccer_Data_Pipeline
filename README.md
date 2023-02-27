@@ -67,26 +67,26 @@ I researched the capabilities of PostgreSQL -users accessing wise- and found tha
 
 ## Files Description
 
-## database.sqlite
+```database.sqlite```
 Database after modification.
 
-## fifa_dag.py
+```fifa_dag.py```
 The dag file that will be running on Airflow
 
-## data_scraping.py
+```data_scraping.py```
 Data scraping task imported into fifa dag.
 
-## data_loading_trasforming.py
+```data_loading_trasforming.py```
 Data loading and transforming task imported into fifa dag.
 
-## data_quality.py
+```data_quality.py```
 Data quality checks imported into fifa dag.
 
-## create_tables.sql
+```create_tables.sql```
 Script to create database tables
 
-## Drafting and Exploring Data.ipynb
+```Drafting and Exploring Data.ipynb```
 Notebook to illustrate the thought process of mine
 
-## Exploratory Data Analysis.ipynb
+```Exploratory Data Analysis.ipynb```
 Notebook containing data analysis
