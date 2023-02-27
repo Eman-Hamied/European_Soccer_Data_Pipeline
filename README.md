@@ -1,90 +1,92 @@
-# Data Modeling with Postgres
+# European Soccer Data Pipeline
 
 ## Introduction
 
-A startup called Sparkify wants to analyze the data they've been collecting on songs and user activity on their new music streaming app. The analytics team is particularly interested in understanding what songs users are listening to. Currently, they don't have an easy way to query their data, which resides in a directory of JSON logs on user activity on the app, as well as a directory with JSON metadata on the songs in their app.
-
-They'd like a data engineer to create a Postgres database with tables designed to optimize queries on song play analysis, and bring you on the project. Your role is to create a database schema and ETL pipeline for this analysis. You'll be able to test your database and ETL pipeline by running queries given to you by the analytics team from Sparkify and compare your results with their expected results.
-
-## Project Description
-
-In this project, you'll apply what you've learned on data modeling with Postgres and build an ETL pipeline using Python. To complete the project, you will need to define fact and dimension tables for a star schema for a particular analytic focus, and write an ETL pipeline that transfers data from files in two local directories into these tables in Postgres using Python and SQL.
+This project is the final project of Udacity Data Engineering Nanodegree. I'm trying to use part of the technologies I've learned in the nandoegree.
 
 
-## Running the Python Scripts
+## Project Summary
 
+In this project I downloaded the provided sqlite database from this link ```https://www.kaggle.com/datasets/hugomathien/soccer```. I explored the data and decided to combine it with scraped data form ```https://sofifa.com``` to fit with the data model I decided on. After creating database and tables we will move to airflow pipeline and run it to scrape, transform and load data to PostgreSQL. 
+
+## Used Technologies
+1. Python
+2. SQLite
+3. PostgreSQL
+4. Apache Airflow
+
+## Exploring and Assessing Data
+
+In this project I attached the thought process of mine in the ```Drafting and Exploring Data.ipynb```. I started by exploring the sqlite tables and assessing the previously loaded data. I even exported all tables to csv files as part of my process to help me understand the data. Once I understood it I decided on the data model which I'll be demonstrating in the next section. To make the model and data more flexible I decided to scrape players and teams data and merge it to the database as the teams and players data provided by the database from kaggle were missing important parts in my opinion. We will be selecting specific columns from some tables that fit better with our model.
+
+
+## Data Model
+
+Here is the database snowflake schema for European Soccer Database project 
+<img src="european_soccer.png" alt="ERD Diagram" width="800"/>
+
+We have 6 dimensions and one fact table as demonestrated above. Each player has some attributes over years so as teams have attributes for each one linked by date. I've decided that match will be the end table for me as it links all tables together. I tried to make this model as flecible to analytics as possible to increase performance and decrease time.
+
+## Disclaimer
+At first we should know that I modified the provided database from kaggle and cleansed the data a little bit before merging. I removed duplicates and ids conflicts as some of the players ids were having duplicated ids with different fifa id. Part of my data transformation was that I calculated the ages for all players from the birthday column. So the SQLite database attached to our project is not the original one from kaggle.
+
+
+## Tables Creation and ETL
+- As a prerequisite european_soccer database should be created.
+
+### First Step
 At the terminal:
-
 1. ```python create_tables.py```
-2. ```python etl.py```
+
+### Second Step
+At airflow UI find:
+1. ```fifa_dag.py```
+run it and you should see something like this
+<img src="FIFA_DAG.png" alt="DAG" width="800"/>
+
+The dag at first scrapes the data and exports two csv files ```scraped_players.csv``` and ```scraped_teams.csv``` we can find them at a relative path one folder back from dag folder.
+After this the dag connects to our PostgreSQL previously created european_soccer database. Then it makes some transformations to the data, truncates the database tables then load data into our database.
+After the previous step airflow will run Quality Checks task with the provided queries and results to make sure that our data were loaded successfuly.
+
+### Third Step
+This step is purely Analysis and Stats from our database. In the attached ```Exploratory Data Analysis.ipynb``` file you can find some analysis performed by me in the form of questions and answers to make it easier to any user to understand it well. 
 
 
-## Database Schema
+## Project Write Up
+At first I want to explain why I chose thos technologies used in this project. For starter I chose to use PostgreSQL as the end database because it has more features to it than SQLite and I have a better understanding for Postgres than SQLite. Before I went to Airflow choice I decided at first I will write raw python code to run the whole pipeline but I thought that it would be better if I could automate this process somehow. After moving to Airflow I noticed that the scraping script is taking less time at Airflow than the time it took from the raw python code so I completed the project with Airflow. For the Analysis part I felt that python along with sql is the better and fastest choice as we are interacting directly with the database.  
 
-Here is the database star schema for Song Play Analysis project 
-<img src="Song_Play_Analysis.png" alt="ERD Diagram" width="800"/>
+### What will we change if The data was increased by 100x ?!
+For massive datasets we can go with a cloud based solution like Amazon S3 bucket.
 
-This design will offer flexibility with the queries being used for analysis.
+### The pipelines would be run on a daily basis by 7 am every day ?!
+I would schedule the Airflow dag to run daily at 7 am.
 
-## ETL Process
-
-### Song Dataset
-
-The first dataset is a subset of real data from the Million Song Dataset. Each file is in JSON format and contains metadata about a song and the artist of that song. The files are partitioned by the first three letters of each song's track ID. For example, here are file paths to two files in this dataset.
-
-```
-song_data/A/B/C/TRABCEI128F424C983.json
-song_data/A/A/B/TRAABJL12903CDCF1A.json
-```
-
-And below is an example of what a single song file, TRAABJL12903CDCF1A.json, looks like.
-
-```
-{
-    "num_songs": 1,
-    "artist_id": "ARJIE2Y1187B994AB7",
-    "artist_latitude": null,
-    "artist_longitude": null,
-    "artist_location": "",
-    "artist_name": "Line Renaud",
-    "song_id": "SOUPIRU12A6D4FA1E1",
-    "title": "Der Kleine Dompfaff",
-    "duration": 152.92036,
-    "year": 0
-}
-```
-
-This information is parsed to populate the Songs and Artists Dimension tables.
-
-### Log Dataset
-
-The second dataset consists of log files in JSON format generated by this event simulator based on the songs in the dataset above. These simulate activity logs from a music streaming app based on specified configurations.
-
-The log files in the dataset I'll be working with are partitioned by year and month. For example, here are filepaths to two files in this dataset.
-
-```
-log_data/2018/11/2018-11-12-events.json
-log_data/2018/11/2018-11-13-events.json
-```
+### The database needed to be accessed by 100+ people ?!
+I researched the capabilities of PostgreSQL -users accessing wise- and found that it can handle up to 115 users. So I guess in this case we can stick to postgres or move to Amazon Redshift.
 
 
 ## Files Description
 
-## test.ipynb
-displays the first few rows of each table to let you check the database.
+## database.sqlite
+Database after modification.
 
-## create_tables.py
+## fifa_dag.py
+The dag file that will be running on Airflow
 
-Drops and creates database tables. Run this file to reset tables before each time before running  ETL scripts.
+## data_scraping.py
+Data scraping task imported into fifa dag.
 
-## etl.ipynb
+## data_loading_trasforming.py
+Data loading and transforming task imported into fifa dag.
 
-Reads and processes a single file from song_data and log_data and loads the data into your tables. This notebook contains detailed instructions on the ETL process for each of the tables.
+## data_quality.py
+Data quality checks imported into fifa dag.
 
-## etl.py
+## create_tables.sql
+Script to create database tables
 
-Reads and processes files from song_data and log_data and loads them into database tables. it's the same processes as the ETL notebook.
+## Drafting and Exploring Data.ipynb
+Notebook to illustrate the thought process of mine
 
-## sql_queries.py
-
-Contains all sql queries, and is imported into the last three files above.
+## Exploratory Data Analysis.ipynb
+Notebook containing data analysis
