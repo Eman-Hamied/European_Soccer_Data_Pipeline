@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-version https://git-lfs.github.com/spec/v1
-oid sha256:9d270a929dacba52555e85550638106ea3febab66c47d68dbb0eee3dffda8200
-size 5367
-=======
 # European Soccer Data Pipeline
 
 ## Introduction
@@ -95,4 +90,4 @@ Notebook to illustrate the thought process of mine
 
 ```Exploratory Data Analysis.ipynb```
 Notebook containing data analysis
->>>>>>> e7d4e6d7bbb6d3f4b836d0d815d92425898eb53d
+
