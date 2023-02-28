@@ -7,7 +7,11 @@ This project is the final project of Udacity Data Engineering Nanodegree. I'm tr
 
 ## Project Summary
 
-In this project I downloaded the provided sqlite database from this link ```https://www.kaggle.com/datasets/hugomathien/soccer```. I explored the data and decided to combine it with scraped data form ```https://sofifa.com``` to fit with the data model I decided on. After creating database and tables we will move to airflow pipeline and run it to scrape, transform and load data to PostgreSQL. This database is very useful for users who bet on teams and players. I provided ```Exploratory Data Analysis.ipynb``` file presenting a sample of the quesstions this data can answer by querying it and viewing results.
+In this project I downloaded the provided sqlite database from this link ```https://www.kaggle.com/datasets/hugomathien/soccer```. I explored the data and decided to combine it with scraped data form ```https://sofifa.com``` to fit with the data model I decided on. After creating database and tables we will move to airflow pipeline and run it to scrape, transform and load data to PostgreSQL. 
+
+## Who are the users that will benefit from this database?@
+
+This database is very useful for users who bet on teams and players. I provided ```Exploratory Data Analysis.ipynb``` file presenting a sample of the quesstions this data can answer by querying it and viewing results. You can find past statistics and rich data for the team or player you want to bet on.
 
 ## Used Technologies
 1. Python
