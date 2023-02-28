@@ -56,7 +56,7 @@ This step is purely Analysis and Stats from our database. In the attached ```Exp
 At first I want to explain why I chose thos technologies used in this project. For starter I chose to use PostgreSQL as the end database because it has more features to it than SQLite and I have a better understanding for Postgres than SQLite. Before I went to Airflow choice I decided at first I will write raw python code to run the whole pipeline but I thought that it would be better if I could automate this process somehow. After moving to Airflow I noticed that the scraping script is taking less time at Airflow than the time it took from the raw python code so I completed the project with Airflow. For the Analysis part I felt that python along with sql is the better and fastest choice as we are interacting directly with the database.  
 
 ### What will we change if The data was increased by 100x ?!
-For massive datasets we can go with a cloud based solution like Amazon S3 bucket.
+For massive datasets I guess it's better to move to redshift and use partitioning wisely to increase performance.
 
 ### The pipelines would be run on a daily basis by 7 am every day ?!
 I would schedule the Airflow dag to run daily at 7 am.
