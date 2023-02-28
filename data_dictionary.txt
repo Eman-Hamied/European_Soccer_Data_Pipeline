@@ -1,0 +1,67 @@
+﻿
+dim_player
+Primary key: player_fifa_id
+ |--player_fifa_id (bigint): Unique identifier for each player
+ |--player_name (string): Player's name
+ |--age (int): Player's age
+ |--height (float): Player's height
+ |--weight (float): Player's weight
+
+ dim_player_attr
+Primary key: player_fifa_id
+ |--player_fifa_id (bigint): Unique identifier for each player
+ |--at_the_time_age (int): Player's age at the time this info taken place
+ |--overall_rating (float): Player's rating at the time
+ |--team (string): Player's team at the time
+ |--contract_time (string): Player time spent in the team
+ |--wage (string): Player's wage at the time
+ |--total_stats (bigint): Player's total stats at the time
+ |--info_date (date): Date for all the above info 
+ 
+ dim_team
+Primary key: team_fifa_id
+ |--team_fifa_id (bigint): Unique identifier for each team
+ |--team_api_id (int): Identifier scraped from sofifa website and presented in matches
+ |--team_name (string): Team name
+
+  dim_team_attr
+Primary key: team_api_id
+ |--team_api_id (string): Unique identifier for each team
+ |--build_up_play_speed (int): Teams build up speed
+ |--build_up_play_dribbling (int): Teams build up dribbling
+ |--build_up_play_passing (int): Teams build up passing
+ |--deffense_pressure (int): Teams defense pressure
+ |--deffense_aggression (int): Teams defense aggression
+ |--deffense_team_width (int): Teams defense width
+ |--info_date (date): Date for all the above info 
+ 
+ 
+  dim_league
+Primary key: league_id
+ |--league_id (bigint): Unique identifier for each league
+ |--country_name (string): League's country
+ |--league_name (string): League's name
+
+ 
+   fct_match
+Primary key: match_id
+ |--match_id (bigint): Unique identifier for each match
+ |--league_id (bigint): League's id that this match took place in 
+ |--season (string): Match's season
+ |--stage (int): Match's stage
+ |--match_date (timestamp): Match's date
+ |--home_team_api_id (string): Team that is playing at home country
+ |--away_team_api_id (string): Team that is playing away from home country
+ |--home_team_goal (int): Home team score
+ |--away_team_goal (date): Away team score
+ 
+    dim_time
+Primary key: match_date
+ |--match_date (timestamp): Unique identifier for each match that is a key for our time table
+ |--day (int): match day
+ |--week (int): match week
+ |--month (string): match month
+ |--year (int): match year
+ |--weekday (string): match weekday
+
+ 
