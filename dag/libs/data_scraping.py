@@ -41,49 +41,49 @@ class DataScraping(BaseOperator):
         df__scraped_players = pd.DataFrame(columns = column)
 
         # Looping over years from 2008 to 2016
-        for offset in range(80002,170002,10000):
+        for offset in range(80000,170000,10000):
             self.log.info('Starting Players Scraping ..')
-            if offset in [80002,90002]:
-                # Checking on path
-                url = (f"https://sofifa.com/players?type=all&ct%5B0%5D=2&r=0{offset}&set=true")
-            else:
-                url = (f"https://sofifa.com/players?type=all&ct%5B0%5D=2&r={offset}&set=true")
-        
-        # Looping over pages
-        for j in range (0,30):
+            for i in range(0,3):
+                offset = offset + i
+                # Looping over pages
+                for j in range (0,30):
+                    if offset in [80000,90000]:
+                        # Checking on path
+                        url = (f"https://sofifa.com/players?type=all&ct%5B0%5D=2&r=0{offset}&set=true")
+                    else:
+                        url = (f"https://sofifa.com/players?type=all&ct%5B0%5D=2&r={offset}&set=true")
+                    # Appending offset to url
+                    url = url + (f"&offset={j*60}")
+                    p_html = requests.get(url, headers={'User-Agent': 'Mozilla/5.0'})
+                    p_soup = p_html.text
+                    data = Soup(p_soup,'html.parser')
+                    table = data.find('tbody')
 
-            # Appending offset to url
-            url = url + (f"&offset={j*60}")
-            p_html = requests.get(url, headers={'User-Agent': 'Mozilla/5.0'})
-            p_soup = p_html.text
-            data = Soup(p_soup,'html.parser')
-            table = data.find('tbody')
-
-            # Looping over objects 
-            for i in table.findAll('tr'):   
-                td = i.findAll('td')
-                # Get player id
-                ID = td[0].find('img').get('id')
-                # Get player name
-                Name = td[1].findAll('a')[0].text
-                # Get player age
-                Age = td[2].text.split()
-                # Get player rating
-                Overall_Rating = td[3].find('span').text
-                # Get player team
-                Team = td[5].find('a').text
-                # Get player contract time
-                Sub = td[5].find('div',{'class':'sub'}).text.strip()
-                # Get player wage
-                Wage = td[7].text.strip()
-                # Get player total states
-                Total_Stats = td[8].text.strip()
-                # Get info date
-                Date = data.findAll('span',{'class':'bp3-button-text'})[1].text
-                player_data = pd.DataFrame([[ID,Name,Age,Overall_Rating,Team,Sub,Wage,Total_Stats,Date]])
-                player_data.columns = column
-                # Appending data
-                df__scraped_players = pd.concat([df__scraped_players,player_data], ignore_index = True)
+                    # Looping over objects 
+                    for i in table.findAll('tr'):   
+                        td = i.findAll('td')
+                        # Get player id
+                        ID = td[0].find('img').get('id')
+                        # Get player name
+                        Name = td[1].findAll('a')[0].text
+                        # Get player age
+                        Age = td[2].text.split()
+                        # Get player rating
+                        Overall_Rating = td[3].find('span').text
+                        # Get player team
+                        Team = td[5].find('a').text
+                        # Get player contract time
+                        Sub = td[5].find('div',{'class':'sub'}).text.strip()
+                        # Get player wage
+                        Wage = td[7].text.strip()
+                        # Get player total states
+                        Total_Stats = td[8].text.strip()
+                        # Get info date
+                        Date = data.findAll('span',{'class':'bp3-button-text'})[1].text
+                        player_data = pd.DataFrame([[ID,Name,Age,Overall_Rating,Team,Sub,Wage,Total_Stats,Date]])
+                        player_data.columns = column
+                        # Appending data
+                        df__scraped_players = pd.concat([df__scraped_players,player_data], ignore_index = True)
         
         self.log.info('Starting Teams Scraping ..')
         # Defining columns
